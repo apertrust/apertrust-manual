@@ -1,11 +1,24 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
+import { existsSync, readdirSync } from "node:fs";
+import { basename } from "node:path";
 
 // Each version of the Guide is built on a base of its own (tools/build-site.sh):
 // /development/ from main, /X.Y/ from release-X.Y. A plain `npm run build` or
 // `npm run dev` is the development version.
 const base = process.env.GUIDE_BASE ?? "/development";
+
+// A sidebar group for a folder of English pages, left out while the folder has no page,
+// whatever else it holds: screenshots alone would give an empty group. A page is a file
+// Starlight's docs loader reads, Markdown whose name does not start with `_`.
+const pageFile = /^[^_].*\.(markdown|mdown|mkdn|mkd|mdwn|md|mdx)$/;
+const group = (label, translations, directory) => {
+  const folder = new URL(`./src/content/docs/en/${directory}`, import.meta.url);
+  const pages =
+    existsSync(folder) && readdirSync(folder, { recursive: true }).some((name) => pageFile.test(basename(String(name))));
+  return pages ? [{ label, translations, items: [{ autogenerate: { directory } }] }] : [];
+};
 
 export default defineConfig({
   site: "https://guide.apertrust.org",
@@ -64,7 +77,12 @@ export default defineConfig({
         {
           label: "Tools",
           translations: { uk: "Інструменти", pl: "Narzędzia" },
-          items: [{ autogenerate: { directory: "tools" } }],
+          // A tool's page by its kind: processing tools edit the photo, utility tools edit
+          // nothing of their own (Collections, History, Scopes, Export and the rest).
+          items: [
+            ...group("Processing tools", { uk: "Інструменти обробки", pl: "Narzędzia przetwarzania" }, "tools/processing"),
+            ...group("Utility tools", { uk: "Допоміжні інструменти", pl: "Narzędzia pomocnicze" }, "tools/utility"),
+          ],
         },
         {
           label: "Concepts",

@@ -2,8 +2,9 @@
 <!--
   The site's one 404 page, which GitHub Pages serves for every path the site does not
   have (decision 97). tools/build-site.sh fills in the versions built and the newest.
-  - /{version}/{language}/topic/{topic}/ with no page claiming the topic: the topic's
-    page is not written yet, said in that language, with a link to that version's start.
+  - /{version}/{language}/… with no page there, a Help topic no page claims among them:
+    the page is not written yet, said in that language, with a link to that version's
+    start.
   - A language the Guide does not have: the same path in English.
   - /latest/…: the same path in the newest version.
   - Anything else: not found, with a link to the start page.
@@ -69,8 +70,8 @@
           lang: "en-GB",
           missingTitle: "Page not found",
           missingBody: "There is no page at this address.",
-          topicTitle: "This page isn't written yet",
-          topicBody:
+          unwrittenTitle: "This page isn't written yet",
+          unwrittenBody:
             "The Guide doesn't have this page yet. It's on its way; meanwhile the start page and its search may help.",
           start: "Go to the start page",
         },
@@ -78,8 +79,8 @@
           lang: "uk",
           missingTitle: "Сторінку не знайдено",
           missingBody: "За цією адресою немає сторінки.",
-          topicTitle: "Цю сторінку ще не написано",
-          topicBody:
+          unwrittenTitle: "Цю сторінку ще не написано",
+          unwrittenBody:
             "У посібнику ще немає цієї сторінки. Вона з'явиться; а поки що допоможуть головна сторінка і пошук.",
           start: "На головну сторінку",
         },
@@ -87,8 +88,8 @@
           lang: "pl",
           missingTitle: "Nie znaleziono strony",
           missingBody: "Pod tym adresem nie ma strony.",
-          topicTitle: "Ta strona nie jest jeszcze napisana",
-          topicBody:
+          unwrittenTitle: "Ta strona nie jest jeszcze napisana",
+          unwrittenBody:
             "Przewodnik nie ma jeszcze tej strony. Pojawi się; tymczasem pomoże strona główna i wyszukiwarka.",
           start: "Przejdź do strony głównej",
         },
@@ -103,12 +104,12 @@
         location.replace(`/${version}/en/${tail}`);
       } else {
         const known = versions.includes(version);
-        const lang = known && languages.includes(language) ? language : "en";
+        const unwritten = known && languages.includes(language);
+        const lang = unwritten ? language : "en";
         const w = words[lang];
-        const topic = known && rest[0] === "topic";
         document.documentElement.lang = w.lang;
-        document.getElementById("title").textContent = topic ? w.topicTitle : w.missingTitle;
-        document.getElementById("body").textContent = topic ? w.topicBody : w.missingBody;
+        document.getElementById("title").textContent = unwritten ? w.unwrittenTitle : w.missingTitle;
+        document.getElementById("body").textContent = unwritten ? w.unwrittenBody : w.missingBody;
         const start = document.getElementById("start");
         start.textContent = w.start;
         start.href = `/${known ? version : latest}/${lang}/`;

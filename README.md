@@ -17,12 +17,13 @@ Astro needs Node.js 22.23.4 or later.
 ## How it is organised
 
 - **Pages** are Markdown in `src/content/docs/<language>/`, English (`en`, in British English) the source. A page missing in Ukrainian (`uk`) or Polish (`pl`) shows the English page with a note saying so.
-- **Four kinds of page**, after [Diátaxis](https://diataxis.fr/): `getting-started/`, `how-to/`, `tools/` and `concepts/`.
-- **Help topics:** the app opens `/{version}/{language}/topic/{topic}/`, and a page answers the topics it lists in its front matter. The address then sends the reader to that page, wherever it is:
+- **Four kinds of page**, after [Diátaxis](https://diataxis.fr/): `getting-started/`, `how-to/`, `tools/` and `concepts/`. Tools are split by kind: processing tools in `tools/processing/`, such as `tools/processing/exposure`, and utility tools, which edit nothing of their own, in `tools/utility/`, such as `tools/utility/export`.
+- **Help topics:** the app opens `/{version}/{language}/{topic}/`, and a topic is a page's own path, so `tools/processing/exposure` is the Exposure page. A page's front matter lists the topics it answers, its own path implied, a path it had before it moved among them; the build makes a page at each topic that is not its own path, sending the reader on:
 
   ```yaml
   topics:
-    - tools/exposure
+    - tools/processing/exposure
+    - tools/exposure                         # its path before it moved
     - workspaces/hidden-tools#hidden-tools   # a heading on the page
   ```
 

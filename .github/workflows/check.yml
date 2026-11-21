@@ -1,7 +1,9 @@
 name: Check
 
 # A pull request builds the Guide as its branch's version, and its pages' topics are
-# read, so a page that breaks the build or two pages claiming one topic never merge.
+# read, so a page that breaks the build, two pages claiming one topic or a page claiming
+# another page's path never merge. The app has no Help yet, so its topics, and those no
+# page claims, are not checked until `apertrust --list-help-topics` exists.
 on:
   pull_request:
 

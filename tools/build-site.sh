@@ -2,7 +2,8 @@
 # Builds every version of the Guide into one site, site-build/, as GitHub Pages serves it
 # (decision 97): main as /development/, each release-X.Y branch as /X.Y/, the newest
 # release as /latest/ and the site's root, and site/'s own files at the root: the 404 page
-# every missing path gets, a topic not written yet among them, and CNAME.
+# every missing path gets, a page not written yet under a version and language, and
+# CNAME.
 #
 # Usage: tools/build-site.sh        (from the repository's root, its branches fetched)
 set -eu

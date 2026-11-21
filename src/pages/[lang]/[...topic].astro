@@ -1,13 +1,14 @@
 ---
-// A Help topic's address, /{version}/{language}/topic/{topic}/, as the app builds it
-// (decision 97): a page that sends the reader on to the page claiming the topic, in the
-// same language. A topic no page claims has no page here; the site's 404 page says it is
-// not written yet.
-import { claims, type Claim } from "../../../topics";
+// A Help topic's address, /{version}/{language}/{topic}/, as the app builds it (decision
+// 97). A topic that is a page's own path is that page; any other topic a page claims, an
+// old path among them, gets a page here that sends the reader on to it, in the same
+// language. A topic no page claims has no page; the site's 404 page says it is not
+// written yet.
+import { redirects, type Claim } from "../../topics";
 
 export async function getStaticPaths() {
   const languages = ["en", "uk", "pl"];
-  const all = await claims();
+  const all = await redirects();
   return languages.flatMap((lang) =>
     all.map((claim) => ({ params: { lang, topic: claim.topic }, props: { claim } })),
   );
